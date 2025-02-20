@@ -50,13 +50,16 @@ type JWTConfig struct {
 }
 
 func LoadConfig() (*Config, error) {
-	viper.SetConfigFile(".env")
+	viper.SetConfigName(".env") // Don't use full path, just the name
+	viper.SetConfigType("env")  // Explicitly define file type
+	viper.AddConfigPath(".")    // Look in the current directory
+	viper.AddConfigPath("..")   // Also look in the parent directory (root)
+	viper.AddConfigPath("/")    // Look at absolute root (useful in Docker)
 	viper.AutomaticEnv()
 
 	err := viper.ReadInConfig()
-	log.Print(err)
 	if err != nil {
-		return nil, err
+		log.Fatalf("Failed to load config: %v", err)
 	}
 
 	config := &Config{

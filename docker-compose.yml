@@ -61,7 +61,7 @@ services:
   redis:
     image: redis:latest
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:

@@ -13,4 +13,4 @@ docker-build:
 	docker build -t app .
 
 docker-run:
-	docker-compose up
+	docker compose up
