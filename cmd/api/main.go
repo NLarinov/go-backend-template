@@ -66,7 +66,6 @@ func main() {
 
 	// Start server
 	port := cfg.Server.Port
-	fmt.Println("Starting server on port", port)
 	if err := srv.Start(port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
