@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	handlers "github.com/hokamsingh/go-backend-template/internal/handlers/user"
 	"github.com/hokamsingh/go-backend-template/internal/middleware"
@@ -28,6 +30,19 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.CORS())
 	r.Use(middleware.Logger())
+
+	// Load HTML templates
+	r.LoadHTMLGlob("templates/*")
+
+	// Serve static files
+	r.Static("/static", "./static")
+
+	// Serve index.html at "/"
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title": "Welcome to Go Backend",
+		})
+	})
 
 	// Initialize Repositories
 	userRepo := repository.NewUserRepository(db)
