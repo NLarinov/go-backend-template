@@ -20,13 +20,33 @@
         background-position: center;
         background-attachment: fixed;
       }
+
+      @keyframes slideLoop {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(100%);
+        }
+      }
+
+      .loop-slide {
+        white-space: nowrap; /* Prevent text from breaking */
+        display: inline-block; /* Required for proper animation */
+        animation: slideLoop 6s linear infinite;
+      }
     </style>
   </head>
   <body class="text-gray-900 font-sans">
     <div class="container mx-auto px-4 py-8">
-      <h1 class="text-8xl font-bold text-center mb-8 text-white font-mono">
-        Go Backend Template
-      </h1>
+      <div class="overflow-hidden">
+        <h1
+          class="text-8xl font-bold text-center mb-8 text-white font-mono loop-slide"
+        >
+          Go Backend Template
+        </h1>
+      </div>
+
       <p class="text-xl text-center mb-8 text-white font-semibold">
         A scalable backend boilerplate built with
         <strong class="text-blue-400">Go</strong>,
@@ -145,66 +165,6 @@ cd go-backend-template</code></pre>
 ├── templates/       # HTML Templates
 ├── main.go          # Entry Point
 └── .env.example     # Environment Config Sample</code></pre>
-      </div>
-
-      <hr class="my-8 border-gray-300" />
-
-      <div class="glassy-card p-6 mb-8">
-        <h2 class="text-2xl font-semibold mb-4 text-white">📡 API Endpoints</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full bg-gray-800 text-white">
-            <thead>
-              <tr>
-                <th class="py-2 px-4 border-b border-gray-700">Method</th>
-                <th class="py-2 px-4 border-b border-gray-700">Endpoint</th>
-                <th class="py-2 px-4 border-b border-gray-700">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="py-2 px-4 border-b border-gray-700">GET</td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  <code>/api/users</code>
-                </td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  Get all users
-                </td>
-              </tr>
-              <tr>
-                <td class="py-2 px-4 border-b border-gray-700">POST</td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  <code>/api/users</code>
-                </td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  Create a user
-                </td>
-              </tr>
-              <tr>
-                <td class="py-2 px-4 border-b border-gray-700">GET</td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  <code>/api/users/:id</code>
-                </td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  Get user by ID
-                </td>
-              </tr>
-              <tr>
-                <td class="py-2 px-4 border-b border-gray-700">PUT</td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  <code>/api/users/:id</code>
-                </td>
-                <td class="py-2 px-4 border-b border-gray-700">Update user</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-4 border-b border-gray-700">DELETE</td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                  <code>/api/users/:id</code>
-                </td>
-                <td class="py-2 px-4 border-b border-gray-700">Delete user</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
 
       <hr class="my-8 border-gray-300" />
