@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	handlers "github.com/hokamsingh/go-backend-template/internal/handlers/user"
+	"github.com/hokamsingh/go-backend-template/internal/middleware"
 	"github.com/hokamsingh/go-backend-template/internal/repository"
 	"github.com/hokamsingh/go-backend-template/internal/service"
 	"gorm.io/gorm"
@@ -23,6 +24,8 @@ type Controller struct {
 // SetupRouter dynamically sets up routes
 func SetupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
+	r.Use(middleware.CORS())
+	r.Use(middleware.Logger())
 
 	// Initialize Repositories
 	userRepo := repository.NewUserRepository(db)
