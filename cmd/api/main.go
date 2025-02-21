@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// init dbs
-	database.InitDatabases(database.NewPostgresConfig(), database.RedisConfig(cfg.Redis))
+	_ = database.InitDatabases(database.NewPostgresConfig(), database.RedisConfig(cfg.Redis))
 
 	// Initialize PostgreSQL
 	db := database.GetPostgres()

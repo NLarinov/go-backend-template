@@ -25,8 +25,6 @@ func NewPostgresConfig() PostgresConfig {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	fmt.Printf("Database Config: %+v\n", cfg.Database) // Debug print
-
 	return PostgresConfig{
 		Host:     cfg.Database.Host,
 		Port:     cfg.Database.Port,

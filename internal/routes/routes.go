@@ -23,6 +23,8 @@ type Controller struct {
 
 // SetupRouter dynamically sets up routes
 func SetupRouter(db *gorm.DB) *gin.Engine {
+	gin.SetMode("release")
+
 	r := gin.Default()
 	r.Use(middleware.CORS())
 	r.Use(middleware.Logger())

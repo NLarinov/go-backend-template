@@ -2,6 +2,7 @@
 package validator
 
 import (
+	"log"
 	"regexp"
 	"strings"
 
@@ -17,7 +18,10 @@ func init() {
 	validate = validator.New()
 
 	// Register custom validation
-	validate.RegisterValidation("email", validateEmail)
+	err := validate.RegisterValidation("email", validateEmail)
+	if err != nil {
+		log.Print(err)
+	}
 }
 
 func validateEmail(fl validator.FieldLevel) bool {
