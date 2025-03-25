@@ -41,6 +41,11 @@ func (s *UserService) GetByID(ctx context.Context, id uint) (*models.User, error
 	return s.repo.GetByID(ctx, id)
 }
 
+// GetAll fetches all users
+func (s *UserService) GetAll(ctx context.Context) ([]*models.User, error) {
+	return s.repo.GetAll(ctx)
+}
+
 // Create hashes password and creates a new user.
 func (s *UserService) Create(ctx context.Context, input CreateUserInput) (*models.User, error) {
 	hashedPassword, err := hashPassword(input.Password)

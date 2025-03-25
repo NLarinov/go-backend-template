@@ -23,7 +23,9 @@ func main() {
 	}
 
 	// init dbs
-	_ = database.InitDatabases(database.NewPostgresConfig(), database.RedisConfig(cfg.Redis))
+	if err := database.InitDatabases(database.NewPostgresConfig(), database.RedisConfig(cfg.Redis)); err != nil {
+		log.Fatalf("Failed to initialize databases: %v", err)
+	}
 
 	// Initialize PostgreSQL
 	db := database.GetPostgres()

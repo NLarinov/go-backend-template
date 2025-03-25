@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hokamsingh/go-backend-template/internal/config"
+	"github.com/hokamsingh/go-backend-template/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -44,5 +45,24 @@ func NewPostgresConnection(config PostgresConfig) (*gorm.DB, error) {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
+	// Run migrations
+	if err := RunMigrations(db); err != nil {
+		return nil, fmt.Errorf("failed to run migrations: %w", err)
+	}
+
+	// Seed database with initial data
+	if err := SeedDatabase(db); err != nil {
+		log.Printf("Warning: failed to seed database: %v", err)
+	}
+
 	return db, nil
+}
+
+func RunMigrations(db *gorm.DB) error {
+	return db.AutoMigrate(
+		&models.User{},
+		&models.Event{},
+		&models.Speaker{},
+		&models.Tag{},
+	)
 }

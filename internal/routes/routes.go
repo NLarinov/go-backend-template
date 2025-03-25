@@ -4,7 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	handlers "github.com/hokamsingh/go-backend-template/internal/handlers/user"
+	eventHandlers "github.com/hokamsingh/go-backend-template/internal/handlers/event"
+	speakerHandlers "github.com/hokamsingh/go-backend-template/internal/handlers/speaker"
+	userHandlers "github.com/hokamsingh/go-backend-template/internal/handlers/user"
 	"github.com/hokamsingh/go-backend-template/internal/middleware"
 	"github.com/hokamsingh/go-backend-template/internal/repository"
 	"github.com/hokamsingh/go-backend-template/internal/service"
@@ -46,28 +48,39 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 	// Initialize Repositories
 	userRepo := repository.NewUserRepository(db)
+	eventRepo := repository.NewEventRepository(db)
+	speakerRepo := repository.NewSpeakerRepository(db)
 
 	// Initialize Services
 	userService := service.NewUserService(userRepo)
 
 	// Initialize Controllers
-	userController := handlers.NewUserController(userService)
+	userController := userHandlers.NewUserController(userService)
+	eventController := eventHandlers.NewEventController(eventRepo)
+	speakerController := speakerHandlers.NewSpeakerController(speakerRepo)
 
-	// Define controllers and their routes
-	controllers := map[string]Controller{
-		"user": {
-			Routes: []Route{
-				{"GET", "/users/:id", userController.GetUserByID},
-				{"POST", "/users", userController.CreateUser},
-			},
-		},
-	}
-
-	// Register all routes dynamically
+	// API routes
 	api := r.Group("/api")
-	for _, controller := range controllers {
-		for _, route := range controller.Routes {
-			api.Handle(route.Method, route.Path, route.HandlerFunc)
+	{
+		// User routes
+		users := api.Group("/users")
+		{
+			users.GET("", userController.GetAllUsers)
+			users.GET("/:id", userController.GetUserByID)
+			users.POST("", userController.CreateUser)
+		}
+
+		// Event routes
+		events := api.Group("/events")
+		{
+			events.GET("", eventController.GetAllEvents)
+			events.GET("/:id", eventController.GetEventByID)
+		}
+
+		// Speaker routes
+		speakers := api.Group("/speakers")
+		{
+			speakers.GET("", speakerController.GetAllSpeakers)
 		}
 	}
 

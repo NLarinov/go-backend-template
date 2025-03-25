@@ -43,3 +43,12 @@ func (uc *UserController) CreateUser(c *gin.Context) {
 	// Respond with created user
 	c.JSON(http.StatusCreated, user)
 }
+
+func (uc *UserController) GetAllUsers(c *gin.Context) {
+	users, err := uc.service.GetAll(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, users)
+}

@@ -44,3 +44,9 @@ func (r *UserRepository) List(ctx context.Context, offset, limit int) ([]models.
 	err := r.db.WithContext(ctx).Offset(offset).Limit(limit).Find(&users).Error
 	return users, err
 }
+
+func (r *UserRepository) GetAll(ctx context.Context) ([]*models.User, error) {
+	var users []*models.User
+	err := r.db.WithContext(ctx).Find(&users).Error
+	return users, err
+}
