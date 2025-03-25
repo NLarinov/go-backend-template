@@ -1,6 +1,6 @@
-# Go Backend Template
+# Go Backend for Young Conf
 
-A scalable backend boilerplate built with **Go**, **Gin**, **GORM**, **PostgreSQL**, and **Redis**.
+A scalable backend built with **Go**, **Gin**, **GORM**, **PostgreSQL**, and **Redis**.
 
 ## 🚀 Features
 
@@ -79,13 +79,11 @@ Ensure you have the following installed:
 
 ## 📡 API Endpoints
 
-| Method | Endpoint       | Description          |
-|--------|---------------|----------------------|
-| GET    | `/api/users`  | Get all users       |
-| POST   | `/api/users`  | Create a user       |
-| GET    | `/api/users/:id` | Get user by ID |
-| PUT    | `/api/users/:id` | Update user  |
-| DELETE | `/api/users/:id` | Delete user  |
+| Method | Endpoint         | Description                |
+|--------|------------------|----------------------------|
+| GET    | `/api/events`    | Get all events             |
+| GET    | `/api/speakers`  | Create all speakers        |
+| GET    | `/api/speakers/?id={id}` | Get speaker by ID  |
 
 ---
 
@@ -98,20 +96,3 @@ Ensure you have the following installed:
 - **Docker** - Containerization (optional)
 
 ---
-
-## 📝 License
-
-This project is licensed under the **MIT License**. Feel free to use and modify it as needed!
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you find issues or have improvements, feel free to open an issue or PR.
-
----
-
-### 🎯 Author
-
-Developed by **Hokam Singh** with ❤️. Connect on [GitHub](https://github.com/hokamsingh)!
-
