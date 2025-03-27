@@ -22,22 +22,18 @@ func main() {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	// init dbs
-	if err := database.InitDatabases(database.NewPostgresConfig(), database.RedisConfig(cfg.Redis)); err != nil {
-		log.Fatalf("Failed to initialize databases: %v", err)
+	// Initialize PostgreSQL
+	if err := database.Initialize(database.NewPostgresConfig()); err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
-	// Initialize PostgreSQL
-	db := database.GetPostgres()
+	// Get database connection
+	db := database.GetDB()
 	sqlDb, err := db.DB()
 	if err != nil {
 		log.Fatalf("Failed to get DB connection: %v", err)
 	}
 	defer sqlDb.Close()
-
-	// Initialize Redis
-	redisClient := database.GetRedis()
-	defer redisClient.Close()
 
 	// Setup router
 	router := routes.SetupRouter(db)
@@ -50,25 +46,18 @@ func main() {
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-quit
-		fmt.Println("Shutting down server...")
+		log.Println("Shutting down server...")
 
-		// Create shutdown context with a timeout
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
-		// Shutdown services gracefully
 		if err := srv.Shutdown(ctx); err != nil {
-			log.Fatalf("Server shutdown failed: %v", err)
+			log.Fatal("Server forced to shutdown:", err)
 		}
-
-		redisClient.Close()
-		sqlDb.Close()
-		fmt.Println("Server gracefully stopped")
 	}()
 
-	// Start server
-	port := cfg.Server.Port
-	if err := srv.Start(port); err != nil {
+	fmt.Println("Server started on port", cfg.Server.Port)
+	if err := srv.Start(cfg.Server.Port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }

@@ -4,11 +4,18 @@ package database
 import (
 	"fmt"
 	"log"
+	"sync"
+	"time"
 
 	"github.com/hokamsingh/go-backend-template/internal/config"
 	"github.com/hokamsingh/go-backend-template/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+)
+
+var (
+	dbOnce sync.Once
+	db     *gorm.DB
 )
 
 type PostgresConfig struct {
@@ -37,12 +44,29 @@ func NewPostgresConfig() PostgresConfig {
 }
 
 func NewPostgresConnection(config PostgresConfig) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
-		config.Host, config.User, config.Password, config.DBName, config.Port, config.SSLMode)
+	var db *gorm.DB
+	var err error
+	maxRetries := 5
+	retryDelay := 5 * time.Second
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	for i := 0; i < maxRetries; i++ {
+		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
+			config.Host, config.User, config.Password, config.DBName, config.Port, config.SSLMode)
+
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		if err == nil {
+			break
+		}
+
+		log.Printf("Failed to connect to database (attempt %d/%d): %v", i+1, maxRetries, err)
+		if i < maxRetries-1 {
+			log.Printf("Retrying in %v...", retryDelay)
+			time.Sleep(retryDelay)
+		}
+	}
+
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect to database: %w", err)
+		return nil, fmt.Errorf("failed to connect to database after %d attempts: %w", maxRetries, err)
 	}
 
 	// Run migrations
@@ -65,4 +89,18 @@ func RunMigrations(db *gorm.DB) error {
 		&models.Speaker{},
 		&models.Tag{},
 	)
+}
+
+// Initialize initializes database connection
+func Initialize(config PostgresConfig) error {
+	var err error
+	dbOnce.Do(func() {
+		db, err = NewPostgresConnection(config)
+	})
+	return err
+}
+
+// GetDB returns the PostgreSQL database instance
+func GetDB() *gorm.DB {
+	return db
 }
