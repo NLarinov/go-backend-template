@@ -21,7 +21,7 @@ func (r *EventRepository) Create(ctx context.Context, event *models.Event) error
 
 func (r *EventRepository) GetByID(ctx context.Context, id uint) (*models.Event, error) {
 	var event models.Event
-	err := r.db.WithContext(ctx).Preload("Speakers").Preload("Tags").First(&event, id).Error
+	err := r.db.WithContext(ctx).Preload("Tags").Preload("Speakers").First(&event, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (r *EventRepository) GetByID(ctx context.Context, id uint) (*models.Event, 
 
 func (r *EventRepository) GetAll(ctx context.Context) ([]*models.Event, error) {
 	var events []*models.Event
-	err := r.db.WithContext(ctx).Preload("Speakers").Preload("Tags").Find(&events).Error
+	err := r.db.WithContext(ctx).Preload("Tags").Preload("Speakers").Find(&events).Error
 	return events, err
 }
 

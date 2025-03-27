@@ -70,21 +70,24 @@ func SeedDatabase(db *gorm.DB) error {
 			EndTime:     time.Now().Add(96 * time.Hour),
 		},
 	}
+
+	// Создаем события
 	for _, event := range events {
 		if err := db.Create(&event).Error; err != nil {
 			return err
 		}
 	}
 
-	// Связываем события с тегами и спикерами
+	// Связываем события с тегами
 	if err := db.Model(&events[0]).Association("Tags").Append(&tags[0], &tags[2]); err != nil {
 		return err
 	}
-	if err := db.Model(&events[0]).Association("Speakers").Append(&speakers[0]); err != nil {
+	if err := db.Model(&events[1]).Association("Tags").Append(&tags[0], &tags[1]); err != nil {
 		return err
 	}
 
-	if err := db.Model(&events[1]).Association("Tags").Append(&tags[0], &tags[1]); err != nil {
+	// Связываем события со спикерами
+	if err := db.Model(&events[0]).Association("Speakers").Append(&speakers[0]); err != nil {
 		return err
 	}
 	if err := db.Model(&events[1]).Association("Speakers").Append(&speakers[1]); err != nil {

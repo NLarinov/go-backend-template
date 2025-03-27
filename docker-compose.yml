@@ -11,7 +11,6 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     depends_on:
       - postgres
-      - mongodb
       - redis
     environment:
       # Server
@@ -19,7 +18,7 @@ services:
       - SERVER_ENV=${SERVER_ENV}
 
       # Database
-      - DB_HOST=${DB_HOST}
+      - DB_HOST=postgres
       - DB_PORT=${DB_PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -48,16 +47,6 @@ services:
       - app-network
     restart: unless-stopped
 
-  mongodb:
-    image: mongo:7.0.5
-    ports:
-      - "${MONGODB_PORT}:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - app-network
-    restart: unless-stopped
-
   redis:
     image: redis:alpine
     ports:
@@ -74,5 +63,4 @@ networks:
 
 volumes:
   postgres_data:
-  mongodb_data:
   redis_data:
