@@ -22,7 +22,8 @@ FROM alpine:latest
 
 WORKDIR /app
 COPY --from=builder /app/main .
-COPY .env . 
+COPY .env .
+COPY templates ./templates
 
 # Expose port
 EXPOSE 8080
