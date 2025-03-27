@@ -11,7 +11,6 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     depends_on:
       - postgres
-      - redis
     environment:
       # Server
       - SERVER_PORT=${SERVER_PORT}
@@ -25,10 +24,6 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_SSL_MODE=${DB_SSL_MODE}
 
-      # Redis
-      - REDIS_ADDR=${REDIS_ADDR}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_DB=${REDIS_DB}
     networks:
       - app-network
     restart: unless-stopped
@@ -47,20 +42,9 @@ services:
       - app-network
     restart: unless-stopped
 
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - app-network
-    restart: unless-stopped
-
 networks:
   app-network:
     driver: bridge
 
 volumes:
   postgres_data:
-  redis_data:
